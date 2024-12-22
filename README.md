@@ -7,5 +7,7 @@ Coding language developed by Squirrel in C++.
 </p>
 <p align="center">
 Features:
+  <ol>
 <li align="center">Can print</li>
+  </ol>
 </p>

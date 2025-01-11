@@ -73,12 +73,28 @@ class TheInterpreter:
 
     def handle_print(self, args):
         value = " ".join(args)
-        if value.startswith('"') and value.endswith('"'):
+        if value.startswith('f"') and value.endswith('"'):
+            try:
+                value = eval(value, {}, self.variables)
+                print(value)
+            except Exception as e:
+                print(f"Error evaluating f-string: {e}")
+        elif value.startswith('f "') and value.endswith('"'):
+            try:
+                value = eval('f"' + value[3:], {}, self.variables)
+                print(value)
+            except Exception as e:
+                print(f"Error evaluating f-string: {e}")
+        elif value.startswith('"') and value.endswith('"'):
             print(value[1:-1])
         elif value in self.variables:
             print(self.variables[value])
         else:
             print(f"Warning: Undefined variable '{value}' in print statement rgr")
+
+
+
+
 
     def handle_math(self, args):
         if len(args) == 3:
@@ -108,11 +124,10 @@ class TheInterpreter:
 
     def handle_input(self, args):
         var_name = " ".join(args)
-        if var_name not in self.variables or self.variables[var_name] is None:
-            value = input(f"{var_name} >>> ")
-            self.variables[var_name] = value
-        else:
-            print(f"Variable '{var_name}' already initialized.")
+        if var_name.endswith(":"):
+            var_name = var_name[:-1]
+        value = input(f"{var_name} >>> ")
+        self.variables[var_name] = value
 
     def handle_write(self):
         print("Enter your code below. Type 'end' to finish writing the program!!!!")
@@ -159,3 +174,4 @@ class TheInterpreter:
 if __name__ == "__main__":
     interpreter = TheInterpreter()
     interpreter.run()
+

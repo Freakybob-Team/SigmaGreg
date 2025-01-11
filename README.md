@@ -2,6 +2,8 @@
 
 <h1 align="center">SigmaGreg</h1>
 
+<h2 align="center">A love note to LigmaBalls</h2>
+
 <p align="center">
 SigmaGreg is a simple "coding language" built in Python. Originally created in C++, SigmaGreg has evolved thanks to the peakness of Python, leaving C++ behind.
 </p>

@@ -2,14 +2,35 @@
 
 import random
 import winsound
+import os
+import sys
 
 class TheInterpreter:
     def __init__(self):
         self.variables = {}
         self.program_lines = []
+    
+    def run(self, filename=None):
+        if filename:
+            self.run_file(filename)
+        else:
+            self.run_interactive()
 
-    def run(self):
-        print("SigmaGreg Terminal: Type the commands below to execute one line programs! Type 'exit' to quit. type 'gregWRITE' to write a program!!!!")
+    def run_file(self, filename):
+        if not os.path.exists(filename):
+            print(f"Error: File '{filename}' not found.")
+            return
+        try:
+            with open(filename, 'r') as file:
+                for line in file:
+                    line = line.strip()
+                    if line:
+                        self.execute(line)
+        except Exception as e:
+            print(f"Error reading file '{filename}': {e}")
+
+    def run_interactive(self):
+        print("SigmaGreg Terminal: Type the commands below to execute one line programs! Type 'exit' to quit... type 'gregWRITE' to write a program!!!!")
         while True:
             line = input("> ")
             if line == "exit":
@@ -21,7 +42,7 @@ class TheInterpreter:
                 print(f"Error: {e}")
 
     def execute(self, line):
-        if ':' in line:
+        if ':' in line and '=' not in line and not line.strip().startswith('"'):
             self.handle_empty_variable(line)
         elif '=' in line:
             self.handle_assignment(line)
@@ -48,6 +69,8 @@ class TheInterpreter:
                 self.handle_print_all()
             elif command == "gregBeep":
                 self.handle_beep()
+            elif command == "make_file":
+                self.handle_make_file()
             else:
                 print(f"Unrecognized command: {command} sob")
 
@@ -68,8 +91,12 @@ class TheInterpreter:
             self.variables[var_name] = int(value)
         elif value.replace('.', '', 1).isdigit() and value.count('.') < 2:
             self.variables[var_name] = float(value)
+        elif ':' in value:
+            self.variables[var_name] = value
         else:
             self.variables[var_name] = None
+
+
 
     def handle_print(self, args):
         value = " ".join(args)
@@ -93,8 +120,7 @@ class TheInterpreter:
             print(f"Warning: Undefined variable '{value}' in print statement rgr")
 
 
-
-
+    
 
     def handle_math(self, args):
         if len(args) == 3:
@@ -124,10 +150,14 @@ class TheInterpreter:
 
     def handle_input(self, args):
         var_name = " ".join(args)
+        if var_name.startswith('"') and var_name.endswith('"'):
+            print("Error: Variable names cannot be enclosed in quotes.")
+            return
         if var_name.endswith(":"):
             var_name = var_name[:-1]
         value = input(f"{var_name} >>> ")
         self.variables[var_name] = value
+
 
     def handle_write(self):
         print("Enter your code below. Type 'end' to finish writing the program!!!!")
@@ -136,7 +166,7 @@ class TheInterpreter:
             if line == "end":
                 break
             self.program_lines.append(line)
-        print("Program written successfully. Type 'gregRUN' to run it!!!!!!!!")
+        print("Program written successfully. Type 'gregRUN' to run it! Type 'make_file' to turn your file into a .sgc file!")
 
     def handle_run(self):
         if not self.program_lines:
@@ -171,7 +201,32 @@ class TheInterpreter:
     def handle_beep(self):        
         winsound.Beep(1000, 500)
 
+    def handle_make_file(self):
+        if not self.program_lines:
+            print("No program to save... Please write a program first using 'gregWRITE' greg!")
+            return
+        filename = input("Enter the name for your .sgc file!: ")
+        if not filename:
+            print("File name cannot be empty dummy")
+            return
+        if not filename.endswith(".sgc"):
+            filename += ".sgc"
+        try:
+            with open(filename, 'w') as file:
+                for line in self.program_lines:
+                    file.write(line + "\n")
+            print(f"Program saved successfully to {filename}!!!")
+        except Exception as e:
+            print(f"Error saving file: {e}")
+        
+
+
 if __name__ == "__main__":
-    interpreter = TheInterpreter()
-    interpreter.run()
+    if len(sys.argv) > 1:
+        filename = sys.argv[1]
+        interpreter = TheInterpreter()
+        interpreter.run(filename)
+    else:
+        interpreter = TheInterpreter()
+        interpreter.run()
 

@@ -68,6 +68,10 @@ class TheInterpreter:
             self.variables[var_name] = int(value)
         elif value.replace('.', '', 1).isdigit() and value.count('.') < 2:
             self.variables[var_name] = float(value)
+        elif value == "True":
+            self.variables[var_name] = True
+        elif value == "False":
+            self.variables[var_name] = False
         elif ':' in value:
             self.variables[var_name] = value
         else:

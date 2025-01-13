@@ -2,7 +2,7 @@ import random
 import winsound
 import os
 import sys
-
+import time
 class TheInterpreter:
     def __init__(self):
         self.variables = {}
@@ -48,6 +48,10 @@ class TheInterpreter:
                 self.handle_type(args)
             elif command == "gregPrintAll":
                 self.handle_print_all()
+            elif command == "gregSleep":
+                self.handle_sleep(args)
+            elif command == "gregClear":
+                self.handle_clear()
             else:
                 print(f"Unrecognized command: {command}")
                 
@@ -62,7 +66,7 @@ class TheInterpreter:
         value = value.strip()
 
         if value.startswith('"') and value.endswith('"'):
-            value = value[1:-1]
+            value = value[1:-1].replace("\\n", "\n")
             self.variables[var_name] = value
         elif value.isdigit():
             self.variables[var_name] = int(value)
@@ -79,20 +83,16 @@ class TheInterpreter:
 
     def handle_print(self, args):
         value = " ".join(args)
-        if value.startswith('f"') and value.endswith('"'):
+        if (value.startswith('f"') and value.endswith('"')) or (value.startswith('f "') and value.endswith('"')):
             try:
-                value = eval(value, {}, self.variables)
-                print(value)
-            except Exception as e:
-                print(f"Error evaluating f-string: {e}")
-        elif value.startswith('f "') and value.endswith('"'):
-            try:
-                value = eval('f"' + value[3:], {}, self.variables)
-                print(value)
+                value = eval(value.replace('f "', 'f"').replace('f"', 'f"'), {}, self.variables)
+                print(value.replace('\\n', '\n'))
             except Exception as e:
                 print(f"Error evaluating f-string: {e}")
         elif value.startswith('"') and value.endswith('"'):
-            print(value[1:-1])
+            print(value[1:-1].replace('\\n', '\n'))
+        elif value == '\\n':
+            print()
         elif value in self.variables:
             print(self.variables[value])
         else:
@@ -151,14 +151,25 @@ class TheInterpreter:
             print(f"Variable '{var_name}' is of type {type(value).__name__} greg")
         else:
             print(f"Error: Variable '{var_name}' not found greg")
+
     def handle_print_all(self):
         print("Current variables:")
         for var_name, value in self.variables.items():
             print(f"{var_name} = {value}")
 
+    def handle_sleep(self, args):
+        try:
+            time_seconds = int(args[0])
+            time.sleep(time_seconds)
+        except ValueError:
+            print("Error: Invalid time value: Plz put a number g")
+
+    def handle_clear(self):
+        os.system('cls' if os.name == 'nt' else 'clear')
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
         interpreter = TheInterpreter()
         interpreter.run(filename)
+        print("----------------------------------------------")
         input("Press any key to exit...")  

@@ -1,0 +1,3 @@
+# ASSETS FOR SIGMAGREG
+
+yep

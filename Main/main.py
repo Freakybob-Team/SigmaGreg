@@ -4,7 +4,7 @@ import random
 import winsound
 import os
 import sys
-
+import time
 class TheInterpreter:
     def __init__(self):
         self.variables = {}
@@ -69,8 +69,11 @@ class TheInterpreter:
                 self.handle_print_all()
             elif command == "gregBeep":
                 self.handle_beep()
+            elif command == "gregSleep":
+                self.handle_sleep(args)
             elif command == "make_file":
                 self.handle_make_file()
+            
             else:
                 print(f"Unrecognized command: {command} sob")
 
@@ -85,7 +88,7 @@ class TheInterpreter:
         value = value.strip()
 
         if value.startswith('"') and value.endswith('"'):
-            value = value[1:-1]
+            value = value[1:-1].replace("\\n", "\n")
             self.variables[var_name] = value
         elif value.isdigit():
             self.variables[var_name] = int(value)
@@ -104,27 +107,20 @@ class TheInterpreter:
 
     def handle_print(self, args):
         value = " ".join(args)
-        if value.startswith('f"') and value.endswith('"'):
+        if (value.startswith('f"') and value.endswith('"')) or (value.startswith('f "') and value.endswith('"')):
             try:
-                value = eval(value, {}, self.variables)
-                print(value)
-            except Exception as e:
-                print(f"Error evaluating f-string: {e}")
-        elif value.startswith('f "') and value.endswith('"'):
-            try:
-                value = eval('f"' + value[3:], {}, self.variables)
-                print(value)
+                value = eval(value.replace('f "', 'f"').replace('f"', 'f"'), {}, self.variables)
+                print(value.replace('\\n', '\n'))
             except Exception as e:
                 print(f"Error evaluating f-string: {e}")
         elif value.startswith('"') and value.endswith('"'):
-            print(value[1:-1])
+            print(value[1:-1].replace('\\n', '\n'))
+        elif value == '\\n':
+            print()
         elif value in self.variables:
             print(self.variables[value])
         else:
             print(f"Warning: Undefined variable '{value}' in print statement rgr")
-
-
-    
 
     def handle_math(self, args):
         if len(args) == 3:
@@ -204,6 +200,13 @@ class TheInterpreter:
             
     def handle_beep(self):        
         winsound.Beep(1000, 500)
+        
+    def handle_sleep(self, args):
+        try:
+            time_seconds = int(args[0])
+            time.sleep(time_seconds)
+        except ValueError:
+            print("Error: Invalid time value: Plz put a number g")
 
     def handle_make_file(self):
         if not self.program_lines:
@@ -233,4 +236,3 @@ if __name__ == "__main__":
     else:
         interpreter = TheInterpreter()
         interpreter.run()
-

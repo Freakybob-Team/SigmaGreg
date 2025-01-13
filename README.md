@@ -39,8 +39,35 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
   <details>
     <summary align="center">Open this to learn how!</summary>
     <br>
-  
-    I'll add this tomorrow cause eepy
+  <p align="center">
+  <small>Currently only Windows Supported..</small>
+  <br>
+  <br>
+  1. Download the full SigmaGreg ZIP and extract it
+  <br>
+  <br>
+  2. Go to the System Folder and run the <code>sgc_compatible.bat</code>
+  <br>
+  <br>
+  3. It'll ask for admin, this is completely safe and it's only for giving access to give support to Sgc files :3
+  <br>
+  <i>(It'll get rid of the admin after ending the program!!)</i>
+  <br>
+  <br>
+  4. Get the full path from the <code>Interpreter.py</code> in the <code>main</code> folder and put it where it asks for it. 
+  <br>
+  <i>⚠️DON'T ADD QUOTES TO THE PATH OR IT'LL NOT WORK. IT'S COMMON SENSE</i> 😭⚠️
+  <br>
+  <br>
+  5. Get the full path of the ico from the <code>SIGMAGREG</code> folder and put it where it asks.
+  <br>
+  <i>⚠️AGAIN, NO QUOTES</i> 😭⚠️
+  <br>
+  <br>
+  6. Press enter once you get all the Paths in the terminal and it'll make sgc files compatible with your laptop! 
+  <br>
+  Test it out by running a sgc file!
+  </p>
   </details>
 
 ---

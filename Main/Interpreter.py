@@ -3,6 +3,7 @@ import winsound
 import os
 import sys
 import time
+
 class TheInterpreter:
     def __init__(self):
         self.variables = {}
@@ -172,4 +173,5 @@ if __name__ == "__main__":
         interpreter = TheInterpreter()
         interpreter.run(filename)
         print("----------------------------------------------")
-        input("Press any key to exit...")  
+        input("Press enter to exit..")  
+

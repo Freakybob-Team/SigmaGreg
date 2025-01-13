@@ -1,4 +1,4 @@
-# fuck c++, python is easier
+
 
 import random
 import winsound

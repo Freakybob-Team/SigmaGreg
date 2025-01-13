@@ -25,7 +25,9 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
 - **gregRandom** - Gets a random number through 2 numbers you give! Ex: `gregRandom 2 5`  
 - **gregPrintAll** - Prints all the variables and their values!  
 - **gregBeep** - Plays a beep sound!  
-- **make_file** - Makes the last program you wrote using **gregWRITE** and turns it into a sgc file!  
+- **make_file** - Makes the last program you wrote using **gregWRITE** and turns it into a sgc file!
+- **gregSleep** - Makes the terminal wait for how ever long you put it before printing anything else! Ex: `gregSleep 3`
+- **gregCurTime** - Prints out the current time and date!
 
 </details>
 </p>

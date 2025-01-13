@@ -5,11 +5,13 @@ import winsound
 import os
 import sys
 import time
+
 class TheInterpreter:
     def __init__(self):
         self.variables = {}
         self.program_lines = []
-    
+        self.in_multiline_comment = False
+
     def run(self, filename=None):
         if filename:
             self.run_file(filename)
@@ -42,10 +44,22 @@ class TheInterpreter:
                 print(f"Error: {e}")
 
     def execute(self, line):
-        if ':' in line and '=' not in line and not line.strip().startswith('"'):
+        line = line.strip()
+        if line.startswith("`"):
+            self.in_multiline_comment = True
+            return
+        
+        elif 'if' in line and 'else' in line:
+            self.handle_if_else(line)
+
+        elif 'if' in line:
+            self.handle_if(line)
+        elif ':' in line and '=' not in line and not line.strip().startswith('"'):
             self.handle_empty_variable(line)
+
         elif '=' in line:
             self.handle_assignment(line)
+
         else:
             parts = line.split()
             command = parts[0]
@@ -73,9 +87,55 @@ class TheInterpreter:
                 self.handle_sleep(args)
             elif command == "make_file":
                 self.handle_make_file()
-            
+            elif command == "gregCurTime":
+                self.handle_current_time()
             else:
                 print(f"Unrecognized command: {command} sob")
+
+    def handle_if(self, line):
+        condition_part = line.strip()[2:].strip()
+        try:
+            condition_start = condition_part.index('(') + 1
+            condition_end = condition_part.index(')')
+            condition = condition_part[condition_start:condition_end]
+
+            condition_result = eval(condition, {}, self.variables)
+
+            if condition_result:
+                action_start = condition_part.index('then') + 4
+                action = condition_part[action_start:].strip()[1:-1]
+                self.execute(action)
+        except ValueError:
+            print("Error: Condition not found or invalid format.")
+        except Exception as e:
+            print(f"Error: {e}")
+    def handle_if_else(self, line):
+        condition_block = line.split("else")
+        if len(condition_block) < 1:
+            print("Error: Invalid if statement syntax.")
+            return
+
+        condition_part = condition_block[0].strip()[2:].strip()
+        else_part = condition_block[1].strip() if len(condition_block) > 1 else None
+
+        try:
+            condition_start = condition_part.index('(') + 1
+            condition_end = condition_part.index(')')
+            condition = condition_part[condition_start:condition_end]
+
+            condition_result = eval(condition, {}, self.variables)
+
+            if condition_result:
+                action_start = condition_part.index('then') + 4
+                action = condition_part[action_start:].strip()[1:-1]
+                self.execute(action)
+            elif else_part:
+                action = else_part.strip()[1:-1]
+                self.execute(action)
+        except ValueError:
+            print("Error: Condition not found or invalid format.")
+        except Exception as e:
+            print(f"Error: {e}")
 
     def handle_empty_variable(self, line):
         var_name = line.strip(":").strip()
@@ -102,8 +162,6 @@ class TheInterpreter:
             self.variables[var_name] = value
         else:
             self.variables[var_name] = None
-
-
 
     def handle_print(self, args):
         value = " ".join(args)
@@ -158,7 +216,6 @@ class TheInterpreter:
         value = input(f"{var_name} >>> ")
         self.variables[var_name] = value
 
-
     def handle_write(self):
         print("Enter your code below. Type 'end' to finish writing the program!!!!")
         while True:
@@ -197,16 +254,19 @@ class TheInterpreter:
         print("Current variables:")
         for var_name, value in self.variables.items():
             print(f"{var_name} = {value}")
-            
+
     def handle_beep(self):        
         winsound.Beep(1000, 500)
-        
+
     def handle_sleep(self, args):
         try:
             time_seconds = int(args[0])
             time.sleep(time_seconds)
         except ValueError:
             print("Error: Invalid time value: Plz put a number g")
+
+    def handle_current_time(self):
+        print(time.strftime("%Y/%m/%d %H:%M:%S", time.localtime()))
 
     def handle_make_file(self):
         if not self.program_lines:
@@ -225,8 +285,6 @@ class TheInterpreter:
             print(f"Program saved successfully to {filename}!!!")
         except Exception as e:
             print(f"Error saving file: {e}")
-        
-
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

@@ -53,10 +53,6 @@ class TheInterpreter:
                 self.handle_math(args)
             elif command == "gregIn":
                 self.handle_input(args)
-            elif command == "gregWRITE":
-                self.handle_write()
-            elif command == "gregRUN":
-                self.handle_run()
             elif command == "gregType":
                 self.handle_type(args)
             elif command == "gregRandom":
@@ -67,10 +63,10 @@ class TheInterpreter:
                 self.handle_beep()
             elif command == "gregSleep":
                 self.handle_sleep(args)
-            elif command == "make_file":
-                self.handle_make_file()
             elif command == "gregCurTime":
                 self.handle_current_time()
+            elif command == "gregClear":
+                self.handle_clear()
             else:
                 print(f"Unrecognized command: {command} sob")
 
@@ -240,6 +236,6 @@ if __name__ == "__main__":
         interpreter = TheInterpreter()
         interpreter.run(filename)
         print("----------------------------------------------")
-        input("Press enter to exit...")  
+        input("Press enter to exit..")  
 
 

@@ -28,6 +28,7 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
 - **make_file** - Makes the last program you wrote using **gregWRITE** and turns it into a sgc file!
 - **gregSleep** - Makes the terminal wait for how ever long you put it before printing anything else! Ex: `gregSleep 3`
 - **gregCurTime** - Prints out the current time and date!
+- **gregClear** - Clears the terminal screen!
 
 </details>
 </p>

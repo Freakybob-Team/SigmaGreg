@@ -1,5 +1,3 @@
-
-
 import random
 import winsound
 import os
@@ -87,8 +85,12 @@ class TheInterpreter:
                 self.handle_sleep(args)
             elif command == "make_file":
                 self.handle_make_file()
+            elif command == "gregCurDateTime":
+                self.handle_current_datetime()
             elif command == "gregCurTime":
                 self.handle_current_time()
+            elif command == "gregCurDate":
+                self.handle_current_date()
             else:
                 print(f"Unrecognized command: {command} sob")
 
@@ -265,9 +267,15 @@ class TheInterpreter:
         except ValueError:
             print("Error: Invalid time value: Plz put a number g")
 
-    def handle_current_time(self):
-        print(time.strftime("%Y/%m/%d %H:%M:%S", time.localtime()))
+    def handle_current_datetime(self):
+        print(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime()))
 
+    def handle_current_time(self):
+        print(time.strftime("%I:%M:%S %p", time.localtime()))
+    
+    def handle_current_date(self):
+        print(time.strftime("%m/%d/%Y", time.localtime()))
+        
     def handle_make_file(self):
         if not self.program_lines:
             print("No program to save... Please write a program first using 'gregWRITE' greg!")
@@ -294,3 +302,4 @@ if __name__ == "__main__":
     else:
         interpreter = TheInterpreter()
         interpreter.run()
+

@@ -96,10 +96,6 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
   <img src="https://github.com/user-attachments/assets/682adc90-a04f-4575-a894-89819dc1f7ff"/>
   </p>
 
-<h1 align="center">How to write a simple if statement</h1>
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/5d4f663e-0a2f-4fc3-9544-38b74089658e"/>
-</p>
 
 <h1 align="center">How to use the date commands</h1>
 <p align="center">
@@ -115,8 +111,26 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
   <img src="https://github.com/user-attachments/assets/26af03f3-5cf6-4c68-8f53-e2c9a18a311a"/>
 </p>
 
+<h1 align="center">How to use gregBeep</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/74d562e8-d05a-41a3-a5c3-e1eeb1f24e33"/>
+</p>
 
 
+<h1 align="center">How to use gregRandom</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d715c3ac-092b-4fb5-96a9-2fcb5ea29254"/>
+</p>
+
+<h1 align="center">How to clear the terminal screen</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7e2e5c90-7878-42c8-a30c-68812282a14e"/>
+</p>
+
+<h1 align="center">How to write if statements</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/da46e961-becf-4a69-971e-e613f6be7801"/>
+</p>
 
 
 

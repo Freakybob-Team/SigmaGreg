@@ -75,6 +75,70 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
 
 ---
 
+<h1 align="center">How to Write SigmaGreg</h1>
+<p align="center">
+  <details>
+    <summary align="center">Click here to see examples and how to write SigmaGreg code</summary>
+    <br>
+      <p align="center">Writing SigmaGreg is very easy and can be used for <b>VERY SIMPLE PROGRAMS</b>, it's not a coding language for like making a full ah game or app.. it's just for fun :3</p>
+    <p align="center">-----------------------------------------------</p> 
+    <h1 align="center">How to Print variables and strings</h1>
+    <p align="center">
+<img src="https://github.com/user-attachments/assets/f64cffea-7bbc-47dd-aa92-b1f8eb1ecfcc" alt="example1"/>
+    </p>
+<h1 align="center">How to get user input and print it out in a F-String</h1>
+    <p align="center">
+    <img src="https://github.com/user-attachments/assets/301ece1e-70ad-4a6f-aef6-8b9f1551c57d" alt="example2"/>
+    </p>
+
+<h1 align="center">How to do math and put it into a variable</h1>
+  <p align="center">
+  <img src="https://github.com/user-attachments/assets/682adc90-a04f-4575-a894-89819dc1f7ff"/>
+  </p>
+
+
+<h1 align="center">How to use the date commands</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/05c67c82-f0be-4b22-bd6e-d13e26c5251c"/>
+</p>
+<h1 align="center">How to use stuff for variables</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4306d73a-40af-42f0-b2d7-c47f5467e57e"/>
+</p>
+
+<h1 align="center">How to use sleeping</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/26af03f3-5cf6-4c68-8f53-e2c9a18a311a"/>
+</p>
+
+<h1 align="center">How to use gregBeep</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/74d562e8-d05a-41a3-a5c3-e1eeb1f24e33"/>
+</p>
+
+
+<h1 align="center">How to use gregRandom</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d715c3ac-092b-4fb5-96a9-2fcb5ea29254"/>
+</p>
+
+<h1 align="center">How to clear the terminal screen</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/7e2e5c90-7878-42c8-a30c-68812282a14e"/>
+</p>
+
+<h1 align="center">How to write if statements</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/da46e961-becf-4a69-971e-e613f6be7801"/>
+</p>
+
+
+
+    
+  </p>
+  </details>
+
+  ---
   
 <p align="center">
   2024-2025 Freakybob-Team. Everything is licensed under MIT.

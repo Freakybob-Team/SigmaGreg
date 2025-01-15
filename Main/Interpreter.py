@@ -63,6 +63,10 @@ class TheInterpreter:
                 self.handle_beep()
             elif command == "gregSleep":
                 self.handle_sleep(args)
+            elif command == "gregCurDateTime":
+                self.handle_current_datetime()
+            elif command == "gregCurDate":
+                self.handle_current_date()
             elif command == "gregCurTime":
                 self.handle_current_time()
             elif command == "gregClear":
@@ -226,8 +230,15 @@ class TheInterpreter:
 
     def handle_clear(self):
         os.system('cls' if os.name == 'nt' else 'clear')
+        
+    def handle_current_datetime(self):
+        print(time.strftime("%m/%d/%Y %H:%M:%S", time.localtime()))
+
     def handle_current_time(self):
-        print(time.strftime("%Y/%m/%d %H:%M:%S", time.localtime()))
+        print(time.strftime("%I:%M:%S %p", time.localtime()))
+    
+    def handle_current_date(self):
+        print(time.strftime("%m/%d/%Y", time.localtime()))
 
         
 if __name__ == "__main__":
@@ -237,5 +248,6 @@ if __name__ == "__main__":
         interpreter.run(filename)
         print("----------------------------------------------")
         input("Press enter to exit..")  
+
 
 

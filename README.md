@@ -110,6 +110,11 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
   <img src="https://github.com/user-attachments/assets/4306d73a-40af-42f0-b2d7-c47f5467e57e"/>
 </p>
 
+<h1 align="center">How to use sleeping</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/26af03f3-5cf6-4c68-8f53-e2c9a18a311a"/>
+</p>
+
 
 
 

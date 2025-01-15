@@ -93,7 +93,25 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
 
 <h1 align="center">How to do math and put it into a variable</h1>
   <p align="center">
-  
+  <img src="https://github.com/user-attachments/assets/682adc90-a04f-4575-a894-89819dc1f7ff"/>
+  </p>
+
+<h1 align="center">How to write a simple if statement</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/5d4f663e-0a2f-4fc3-9544-38b74089658e"/>
+</p>
+
+<h1 align="center">How to use the date commands</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/05c67c82-f0be-4b22-bd6e-d13e26c5251c"/>
+</p>
+<h1 align="center">How to use stuff for variables</h1>
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/4306d73a-40af-42f0-b2d7-c47f5467e57e"/>
+</p>
+
+
+
 
 
 

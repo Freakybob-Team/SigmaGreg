@@ -75,6 +75,33 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
 
 ---
 
+<h1 align="center">How to Write SigmaGreg</h1>
+<p align="center">
+  <details>
+    <summary align="center">Click here to see examples and how to write SigmaGreg code</summary>
+    <br>
+      <p align="center">Writing SigmaGreg is very easy and can be used for <b>VERY SIMPLE PROGRAMS</b>, it's not a coding language for like making a full ah game or app.. it's just for fun :3</p>
+    <p align="center">-----------------------------------------------</p> 
+    <h1 align="center">How to Print variables and strings</h1>
+    <p align="center">
+<img src="https://github.com/user-attachments/assets/f64cffea-7bbc-47dd-aa92-b1f8eb1ecfcc" alt="example1"/>
+    </p>
+<h1 align="center">How to get user input and print it out in a F-String</h1>
+    <p align="center">
+    <img src="https://github.com/user-attachments/assets/301ece1e-70ad-4a6f-aef6-8b9f1551c57d" alt="example2"/>
+    </p>
+
+<h1 align="center">How to do math and put it into a variable</h1>
+  <p align="center">
+  
+
+
+
+    
+  </p>
+  </details>
+
+  ---
   
 <p align="center">
   2024-2025 Freakybob-Team. Everything is licensed under MIT.

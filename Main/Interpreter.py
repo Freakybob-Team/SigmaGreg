@@ -8,13 +8,13 @@ class TheInterpreter:
     def __init__(self):
         self.variables = {}
         self.program_lines = []
-        
+        self.functions = {}
     def run(self, filename):
         if os.path.exists(filename):
             self.run_file(filename)
         else:
             print(f"Error: File '{filename}' not found SOB")
-        
+            
     def run_file(self, filename):
         try:
             with open(filename, 'r') as file:
@@ -24,6 +24,9 @@ class TheInterpreter:
                         self.execute(line)
         except Exception as e:
             print(f"ERRRORORR reading file '{filename}': {e}")
+
+        
+
             
     def execute(self, line):
         line = line.strip()
@@ -49,8 +52,6 @@ class TheInterpreter:
 
             if command == "gregPr":
                 self.handle_print(args)
-            elif command == "gregMa":
-                self.handle_math(args)
             elif command == "gregIn":
                 self.handle_input(args)
             elif command == "gregType":
@@ -71,6 +72,10 @@ class TheInterpreter:
                 self.handle_current_time()
             elif command == "gregClear":
                 self.handle_clear()
+            elif command == "gregCall":
+                self.handle_function_call(args)
+            elif command == "gregDef":
+                self.handle_function_definition(line, self.program_lines)
             else:
                 print(f"Unrecognized command: {command} sob")
 
@@ -91,6 +96,7 @@ class TheInterpreter:
             print("Error: Condition not found or invalid format.")
         except Exception as e:
             print(f"Error: {e}")
+            
     def handle_if_else(self, line):
         condition_block = line.split("else")
         if len(condition_block) < 1:
@@ -129,64 +135,37 @@ class TheInterpreter:
         var_name = var_name.strip()
         value = value.strip()
 
-        if value.startswith('"') and value.endswith('"'):
-            value = value[1:-1].replace("\\n", "\n")
-            self.variables[var_name] = value
-        elif value.isdigit():
-            self.variables[var_name] = int(value)
-        elif value.replace('.', '', 1).isdigit() and value.count('.') < 2:
-            self.variables[var_name] = float(value)
-        elif value == "True":
-            self.variables[var_name] = True
-        elif value == "False":
-            self.variables[var_name] = False
-        elif ':' in value:
-            self.variables[var_name] = value
-        else:
-            self.variables[var_name] = None
+        try:
+            self.variables[var_name] = eval(value, {}, self.variables)
+        except:
+            if value.startswith('"') and value.endswith('"'):
+                self.variables[var_name] = value[1:-1].replace("\\n", "\n")
+            elif value == "True":
+                self.variables[var_name] = True
+            elif value == "False":
+                self.variables[var_name] = False
+            else:
+                self.variables[var_name] = value
 
     def handle_print(self, args):
         value = " ".join(args)
-        if (value.startswith('f"') and value.endswith('"')) or (value.startswith('f "') and value.endswith('"')):
-            try:
-                value = eval(value.replace('f "', 'f"').replace('f"', 'f"'), {}, self.variables)
-                print(value.replace('\\n', '\n'))
-            except Exception as e:
-                print(f"Error evaluating f-string: {e}")
-        elif value.startswith('"') and value.endswith('"'):
-            print(value[1:-1].replace('\\n', '\n'))
-        elif value == '\\n':
-            print()
-        elif value in self.variables:
-            print(self.variables[value])
-        else:
-            print(f"Warning: Undefined variable '{value}' in print statement rgr")
-
-    def handle_math(self, args):
-        if len(args) == 3:
-            operand1, operator, operand2 = float(args[0]), args[1], float(args[2])
-            result = {
-                "+": operand1 + operand2,
-                "-": operand1 - operand2,
-                "*": operand1 * operand2,
-                "/": operand1 / operand2 if operand2 != 0 else "Error: Division by zero dummy"
-            }.get(operator, f"Error: Unknown operation '{operator}' greg/ Supported operations are: +, -, *, /")
-            if isinstance(result, str):
-                print(result)
+        try:
+            value = eval(value, {}, self.variables)
+            print(value)
+        except:
+            if (value.startswith('f"') and value.endswith('"')) or (value.startswith('f "') and value.endswith('"')):
+                try:
+                    value = eval(value.replace('f "', 'f"').replace('f"', 'f"'), {}, self.variables)
+                except Exception as e:
+                    print(f"Error evaluating f-string: {e}")
+            elif value.startswith('"') and value.endswith('"'):
+                print(value[1:-1].replace('\\n', '\n'))
+            elif value == '\\n':
+                print()
+            elif value in self.variables:
+                print(self.variables[value])
             else:
-                print(int(result) if result.is_integer() else result)
-        else:
-            var_name, operand1, operator, operand2 = args[0], float(args[1]), args[2], float(args[3])
-            result = {
-                "+": operand1 + operand2,
-                "-": operand1 - operand2,
-                "*": operand1 * operand2,
-                "/": operand1 / operand2 if operand2 != 0 else "Error: Division by zero dummy"
-            }.get(operator, f"Error: Unknown operation '{operator}' greg/ Supported operations are: +, -, *, /")
-            if isinstance(result, str):
-                print(result)
-            else:
-                self.variables[var_name] = int(result) if result.is_integer() else result
+                print(f"Warning: Undefined variable '{value}' in print statement rgr")
 
     def handle_input(self, args):
         var_name = " ".join(args)
@@ -240,7 +219,65 @@ class TheInterpreter:
     def handle_current_date(self):
         print(time.strftime("%m/%d/%Y", time.localtime()))
 
-        
+    def parse_lines(self, lines):
+        line_idx = 0
+        while line_idx < len(lines):
+            line = lines[line_idx].strip()
+
+            if line.startswith("greg "):
+                self.execute(line)
+            elif line.startswith("gregDef "):
+                self.handle_function_definition(line, lines, line_idx)
+                line_idx += 1
+            else:
+                line_idx += 1
+
+        if "main" in self.functions:
+            self.run_function("main")
+        else:
+            for line in lines:
+                self.execute(line.strip())
+    def handle_function_definition(self, line, lines, line_idx):
+        function_name = line[8:].strip().split("{")[0].strip()
+        if not function_name:
+            print("Error: function error - Missing function name S:OBS:")
+            return
+
+        function_body = []
+        open_brackets = 0
+        line_idx += 1
+
+        while line_idx < len(lines):
+            line = lines[line_idx].strip()
+
+            if "{" in line:
+                open_brackets += 1
+            if "}" in line:
+                open_brackets -= 1
+
+            if open_brackets == 0 and line != "}":
+                break
+
+            if line:
+                function_body.append(line)
+            line_idx += 1
+
+        self.functions[function_name] = function_body
+
+    def handle_function_call(self, args):
+        function_name = args[0]
+        if function_name in self.functions:
+            self.run_function(function_name)
+        else:
+            print(f"Function '{function_name}' not defined SOB")
+
+    def run_function(self, function_name):
+        function_body = self.functions[function_name]
+        for line in function_body:
+            self.execute(line)
+
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
@@ -248,6 +285,7 @@ if __name__ == "__main__":
         interpreter.run(filename)
         print("----------------------------------------------")
         input("Press enter to exit..")  
+
 
 
 

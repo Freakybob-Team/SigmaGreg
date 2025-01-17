@@ -8,7 +8,6 @@ class TheInterpreter:
     def __init__(self):
         self.variables = {}
         self.program_lines = []
-        self.functions = {}
 
     def run(self, filename=None):
         if filename:
@@ -89,10 +88,6 @@ class TheInterpreter:
                 self.handle_current_time()
             elif command == "gregCurDate":
                 self.handle_current_date()
-            elif command == "gregCall":
-                self.handle_function_call(args)
-            elif command == "gregDef":
-                self.handle_function_definition(line, self.program_lines, len(self.program_lines))
             else:
                 print(f"Unrecognized command: {command} sob")
 
@@ -113,7 +108,6 @@ class TheInterpreter:
             print("Error: Condition not found or invalid format.")
         except Exception as e:
             print(f"Error: {e}")
-            
     def handle_if_else(self, line):
         condition_block = line.split("else")
         if len(condition_block) < 1:
@@ -152,47 +146,60 @@ class TheInterpreter:
         var_name = var_name.strip()
         value = value.strip()
 
-        try:
-            self.variables[var_name] = eval(value, {}, self.variables)
-        except:
-            if value.startswith('"') and value.endswith('"'):
-                self.variables[var_name] = value[1:-1].replace("\\n", "\n")
-            elif value == "True":
-                self.variables[var_name] = True
-            elif value == "False":
-                self.variables[var_name] = False
-            else:
-                self.variables[var_name] = value
+        if value.startswith('"') and value.endswith('"'):
+            value = value[1:-1].replace("\\n", "\n")
+            if "{" in value and "}" in value: 
+                value = eval(f'f"{value}"', {}, self.variables)
+            self.variables[var_name] = value
+        elif value.isdigit():
+            self.variables[var_name] = int(value)
+        elif value.replace('.', '', 1).isdigit() and value.count('.') < 2:
+            self.variables[var_name] = float(value)
+        elif value == "True":
+            self.variables[var_name] = True
+        elif value == "False":
+            self.variables[var_name] = False
+        elif ':' in value:
+            self.variables[var_name] = value
+        else:
+            try:
+                self.variables[var_name] = eval(value, {}, self.variables)
+            except Exception:
+                self.variables[var_name] = None
+
 
     def handle_print(self, args):
         value = " ".join(args)
-        try:
-            value = eval(value, {}, self.variables)
-            print(value)
-        except:
-            if (value.startswith('f"') and value.endswith('"')) or (value.startswith('f "') and value.endswith('"')):
-                try:
-                    value = eval(value.replace('f "', 'f"').replace('f"', 'f"'), {}, self.variables)
-                except Exception as e:
-                    print(f"Error evaluating f-string: {e}")
-            elif value.startswith('"') and value.endswith('"'):
-                print(value[1:-1].replace('\\n', '\n'))
-            elif value == '\\n':
-                print()
-            elif value in self.variables:
-                print(self.variables[value])
-            else:
-                print(f"Warning: Undefined variable '{value}' in print statement rgr")
+        if (value.startswith('f"') and value.endswith('"')) or (value.startswith('f "') and value.endswith('"')):
+            try:
+                value = eval(value.replace('f "', 'f"').replace('f"', 'f"'), {}, self.variables)
+                print(value.replace('\\n', '\n'))
+            except Exception as e:
+                print(f"Error evaluating f-string: {e}")
+        elif value.startswith('"') and value.endswith('"'):
+            print(value[1:-1].replace('\\n', '\n'))
+        elif value == '\\n':
+            print()
+        elif value in self.variables:
+            print(self.variables[value])
+        else:
+            try:
+                print(eval(value, {}, self.variables))
+            except:
+                print(f"Warning: Undefined variable or invalid expression '{value}' in print statement rgr")
 
     def handle_input(self, args):
-        var_name = " ".join(args)
+        var_name = args[0]
+        prompt = " ".join(args[1:]) if len(args) > 1 else f"{var_name} >>> "
+        if '"' in prompt:
+            prompt = prompt.replace('"', '')
         if var_name.startswith('"') and var_name.endswith('"'):
             print("Error: Variable names cannot be enclosed in quotes.")
             return
         if var_name.endswith(":"):
             var_name = var_name[:-1]
-        value = input(f"{var_name} >>> ")
-        self.variables[var_name] = value
+        value = input(prompt)
+        self.variables[var_name] = value.strip()
 
     def handle_write(self):
         print("Enter your code below. Type 'end' to finish writing the program!!!!")
@@ -251,66 +258,8 @@ class TheInterpreter:
     
     def handle_current_date(self):
         print(time.strftime("%m/%d/%Y", time.localtime()))
-
-    # more fucking broken then when my grandma got kidnapped and thrown off a bridge
-
-    def parse_lines(self, lines):
-        line_idx = 0
-        while line_idx < len(lines):
-            line = lines[line_idx].strip()
-
-            if line.startswith("greg "):
-                self.execute(line)
-            elif line.startswith("gregDef "):
-                self.handle_function_definition(line, lines, line_idx)
-                line_idx += 1
-            else:
-                line_idx += 1
-
-        if "main" in self.functions:
-            self.run_function("main")
-        else:
-            for line in lines:
-                self.execute(line.strip())
-    def handle_function_definition(self, line, lines, line_idx):
-        function_name = line[8:].strip().split("{")[0].strip()
-        if not function_name:
-            print("Error: function error - Missing function name S:OBS:")
-            return
-
-        function_body = []
-        open_brackets = 0
-        line_idx += 1
-
-        while line_idx < len(lines):
-            line = lines[line_idx].strip()
-
-            if "{" in line:
-                open_brackets += 1
-            if "}" in line:
-                open_brackets -= 1
-
-            if open_brackets == 0 and line != "}":
-                break
-
-            if line:
-                function_body.append(line)
-            line_idx += 1
-
-        self.functions[function_name] = function_body
-
-    def handle_function_call(self, args):
-        function_name = args[0]
-        if function_name in self.functions:
-            self.run_function(function_name)
-        else:
-            print(f"Function '{function_name}' not defined SOB")
-
-    def run_function(self, function_name):
-        function_body = self.functions[function_name]
-        for line in function_body:
-            self.execute(line)
-
+    
+    
     def handle_make_file(self):
         if not self.program_lines:
             print("No program to save... Please write a program first using 'gregWRITE' greg!")

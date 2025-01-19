@@ -45,7 +45,10 @@ class TheInterpreter:
         if line.startswith("`"):
             self.in_multiline_comment = True
             return
-        
+
+        elif line.startswith("include"):
+            self.handle_include(line, filename)
+
         elif 'if' in line and 'else' in line:
             self.handle_if_else(line)
 
@@ -88,10 +91,19 @@ class TheInterpreter:
                 self.handle_current_time()
             elif command == "gregCurDate":
                 self.handle_current_date()
+            elif command == "gregWriteToFile":
+                self.handle_write_to_file(args)
+            elif command == "gregReadFile":
+                self.handle_read_file(args)
             else:
                 print(f"Unrecognized command: {command} sob")
 
     def handle_if(self, line):
+        if line.startswith("gregPr"):
+            line = line.replace("gregPr", "").strip().strip('"')
+            print(line)
+            return
+    
         condition_part = line.strip()[2:].strip()
         try:
             condition_start = condition_part.index('(') + 1
@@ -103,11 +115,12 @@ class TheInterpreter:
             if condition_result:
                 action_start = condition_part.index('then') + 4
                 action = condition_part[action_start:].strip()[1:-1]
-                self.execute(action)
+                self.execute(action, "Inline")
         except ValueError:
             print("Error: Condition not found or invalid format.")
         except Exception as e:
             print(f"Error: {e}")
+
     def handle_if_else(self, line):
         condition_block = line.split("else")
         if len(condition_block) < 1:
@@ -127,10 +140,10 @@ class TheInterpreter:
             if condition_result:
                 action_start = condition_part.index('then') + 4
                 action = condition_part[action_start:].strip()[1:-1]
-                self.execute(action)
+                self.execute(action, "Inline")
             elif else_part:
                 action = else_part.strip()[1:-1]
-                self.execute(action)
+                self.execute(action, "Inline")
         except ValueError:
             print("Error: Condition not found or invalid format.")
         except Exception as e:
@@ -259,6 +272,24 @@ class TheInterpreter:
     def handle_current_date(self):
         print(time.strftime("%m/%d/%Y", time.localtime()))
     
+    def handle_write_to_file(self, args):
+        filename = args[0].strip('"')
+        content = " ".join(args[1:]).strip('"')
+        try:
+            with open(filename, 'w') as f:
+                f.write(content)
+            print(f"Written to file: {filename}")
+        except Exception as e:
+            print(f"Error writing to file: {e}")
+
+    def handle_read_file(self, args):
+        filename = args[0].strip('"')
+        try:
+            with open(filename, 'r') as f:
+                content = f.read()
+            print(content)
+        except Exception as e:
+            print(f"Error reading file: {e}")
     
     def handle_make_file(self):
         if not self.program_lines:
@@ -277,7 +308,7 @@ class TheInterpreter:
             print(f"Program saved successfully to {filename}!!!")
         except Exception as e:
             print(f"Error saving file: {e}")
-
+    
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]

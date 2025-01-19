@@ -95,6 +95,12 @@ class TheInterpreter:
                 self.handle_write_to_file(args)
             elif command == "gregReadFile":
                 self.handle_read_file(args)
+            elif command == "gregExit":
+                raise SystemExit
+            elif command == "gregLeave":
+                raise SystemExit
+            elif command == "gregQuit":
+                raise SystemExit
             else:
                 print(f"Unrecognized command: {command} sob")
 

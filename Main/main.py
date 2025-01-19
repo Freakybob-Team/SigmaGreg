@@ -29,7 +29,7 @@ class TheInterpreter:
             print(f"Error reading file '{filename}': {e}")
 
     def run_interactive(self):
-        print("SigmaGreg Terminal: Type the commands below to execute one line programs! Type 'exit' to quit... type 'gregWRITE' to write a program!!!!")
+        print("SigmaGreg Terminal: Type a command or enter 'exit' to quit; type 'gregWRITE' to write a program.")
         while True:
             line = input("> ")
             if line == "exit":

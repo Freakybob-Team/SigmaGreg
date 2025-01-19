@@ -78,6 +78,12 @@ class TheInterpreter:
                 self.handle_read_file(args)
             elif command == "exit":
                 sys.exit()
+            elif command == "gregExit":
+                raise SystemExit
+            elif command == "gregLeave":
+                raise SystemExit
+            elif command == "gregQuit":
+                raise SystemExit
             else:
                 print(f"Unrecognized command: {command} sob")
 

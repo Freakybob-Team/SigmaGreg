@@ -72,6 +72,10 @@ class TheInterpreter:
                 self.handle_current_time()
             elif command == "gregClear":
                 self.handle_clear()
+            elif command == "gregWriteToFile":
+                self.handle_write_to_file(args)
+            elif command == "gregReadFile":
+                self.handle_read_file(args)
             elif command == "exit":
                 sys.exit()
             else:
@@ -87,6 +91,11 @@ class TheInterpreter:
                 print(f"Error: Include file '{include_filename}' not found in {filename}")
 
     def handle_if(self, line):
+        if line.startswith("gregPr"):
+            line = line.replace("gregPr", "").strip().strip('"')
+            print(line)
+            return
+    
         condition_part = line.strip()[2:].strip()
         try:
             condition_start = condition_part.index('(') + 1
@@ -163,7 +172,6 @@ class TheInterpreter:
             except Exception:
                 self.variables[var_name] = None
 
-
     def handle_print(self, args):
         value = " ".join(args)
         if (value.startswith('f"') and value.endswith('"')) or (value.startswith('f "') and value.endswith('"')):
@@ -196,7 +204,6 @@ class TheInterpreter:
             var_name = var_name[:-1]
         value = input(prompt)
         self.variables[var_name] = value.strip()
-
 
     def handle_beep(self):        
         winsound.Beep(1000, 500)
@@ -239,8 +246,26 @@ class TheInterpreter:
 
     def handle_current_date(self):
         print(time.strftime("%m/%d/%Y", time.localtime()))
-    
 
+    def handle_write_to_file(self, args):
+        filename = args[0].strip('"')
+        content = " ".join(args[1:]).strip('"')
+        try:
+            with open(filename, 'w') as f:
+                f.write(content)
+            print(f"Written to file: {filename}")
+        except Exception as e:
+            print(f"Error writing to file: {e}")
+
+    def handle_read_file(self, args):
+        filename = args[0].strip('"')
+        try:
+            with open(filename, 'r') as f:
+                content = f.read()
+            print(content)
+        except Exception as e:
+            print(f"Error reading file: {e}")
+            
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]
@@ -248,5 +273,3 @@ if __name__ == "__main__":
         interpreter.run(filename)
         print("----------------------------------------------")
         input("Press enter to exit..")
-
-

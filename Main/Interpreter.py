@@ -8,8 +8,13 @@ class TheInterpreter:
     def __init__(self):
         self.variables = {}
         self.program_lines = []
+        self.in_comment = False
 
     def run(self, filename):
+        if not filename.endswith(".sgc"):
+            print(f"Error: File '{filename}' is not a .sgc file...")
+            return
+    
         if os.path.exists(filename):
             self.run_file(filename)
         else:
@@ -18,17 +23,65 @@ class TheInterpreter:
     def run_file(self, filename):
         try:
             with open(filename, 'r') as file:
-                for line in file:
-                    line = line.strip()
-                    if line:
-                        self.execute(line, filename)
+                first_line = file.readline().strip()
+                if first_line == "#GREGDEFINE":
+                    self.handle_gregdefine(file)
+                else:
+                    file.seek(0)
+                    for line in file:
+                        line = line.strip()
+                        if line:
+                            self.execute(line, filename)
         except Exception as e:
-            print(f"ERRRORORR reading file '{filename}': {e}")
+            print(f"Error reading file '{filename}': {e}")
+
+    def handle_gregdefine(self, file):
+        for line in file:
+            line = line.strip()
+            if line:
+                if '=' in line:
+                    self.handle_assignment(line)
+                elif line.startswith("gregPr"):
+                    continue
+                elif line.startswith("gregIn"):
+                    continue
+                elif line.startswith("gregType"):
+                    continue
+                elif line.startswith("gregRandom"):
+                    continue
+                elif line.startswith("gregPrintAll"):
+                    continue
+                elif line.startswith("gregBeep"):
+                    continue
+                elif line.startswith("gregSleep"):
+                    continue
+                elif line.startswith("gregCurrentDate"):
+                    continue
+                elif line.startswith("gregCurrentTime"):
+                    continue
+                elif line.startswith("gregCurrentDateTime"):
+                    continue
+                elif line.startswith("gregClear"):
+                    continue
+                elif line.startswith("gregWriteToFile"):
+                    continue
+                elif line.startswith("gregReadFile"):
+                    continue
+                elif line.startswith("gregExit"):
+                    continue
+            else:
+                continue  
+
 
     def execute(self, line, filename):
         line = line.strip()
+        if self.in_comment:
+            if line.startswith("`") and self.in_comment:
+                self.in_comment = False
+            return
+
         if line.startswith("`"):
-            self.in_multiline_comment = True
+            self.in_comment = True
             return
 
         elif line.startswith("include"):
@@ -85,7 +138,11 @@ class TheInterpreter:
             elif command == "gregQuit":
                 raise SystemExit
             else:
-                print(f"Unrecognized command: {command} sob")
+                print(f"Warning: Unrecognized command '{command}'")
+                try:
+                    exec(line, {}, self.variables)
+                except Exception as e:
+                    print(f"Error executing Python code: {e}")
 
     def handle_include(self, line, filename):
         parts = line.split()
@@ -101,7 +158,7 @@ class TheInterpreter:
             line = line.replace("gregPr", "").strip().strip('"')
             print(line)
             return
-    
+
         condition_part = line.strip()[2:].strip()
         try:
             condition_start = condition_part.index('(') + 1
@@ -140,7 +197,27 @@ class TheInterpreter:
                 action = condition_part[action_start:].strip()[1:-1]
                 self.execute(action, "Inline")
             elif else_part:
-                action = else_part.strip()[1:-1]
+                elif_block = else_part.split("else if")
+                if len(elif_block) > 1:
+                    self.handle_elif(elif_block[1].strip())
+                else:
+                    action = else_part.strip()[1:-1]
+                    self.execute(action, "Inline")
+        except ValueError:
+            print("Error: Condition not found or invalid format.")
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def handle_elif(self, elif_condition):
+        try:
+            condition_start = elif_condition.index('(') + 1
+            condition_end = elif_condition.index(')')
+            condition = elif_condition[condition_start:condition_end]
+            condition_result = eval(condition, {}, self.variables)
+
+            if condition_result:
+                action_start = elif_condition.index('then') + 4
+                action = elif_condition[action_start:].strip()[1:-1]
                 self.execute(action, "Inline")
         except ValueError:
             print("Error: Condition not found or invalid format.")
@@ -271,7 +348,7 @@ class TheInterpreter:
             print(content)
         except Exception as e:
             print(f"Error reading file: {e}")
-            
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         filename = sys.argv[1]

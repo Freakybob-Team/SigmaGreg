@@ -43,6 +43,7 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
     <summary align="center">Open this to learn how!</summary>
     <br>
   <p align="center">
+  <b>MAKE SURE TO MAKE IT AN EXE FIRST. THE EXE TOOL IS IN THE TOOLS FOLDER.</b>
   <small>Currently only Windows Supported..</small>
   <br>
   <br>
@@ -57,7 +58,7 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
   <i>(It'll get rid of the admin after ending the program!!)</i>
   <br>
   <br>
-  4. Get the full path from the <code>Interpreter.py</code> in the <code>main</code> folder and put it where it asks for it. 
+  4. Get the full path from the <code>Interpreter.exe</code> in the folder you made it and put it where it asks for it. 
   <br>
   <i>⚠️DON'T ADD QUOTES TO THE PATH OR IT'LL NOT WORK. IT'S COMMON SENSE</i> 😭⚠️
   <br>

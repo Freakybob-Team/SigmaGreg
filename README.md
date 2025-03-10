@@ -149,4 +149,6 @@ SigmaGreg is a simple "coding language" built in Python. Originally created in C
 </p>
 <p align="center">
   <small>This is still very new. Expect bugs.</small>
+  
+  <small>SigmaGreg will be getting discontinued due to no updates and it being ass. Don't worry, We're not done with SigmaGreg.</small>
 </p>
